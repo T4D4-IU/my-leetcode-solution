@@ -4,18 +4,19 @@ impl Solution {
     pub fn frequency_sort(nums: Vec<i32>) -> Vec<i32> {
         let mut counts = HashMap::new();
 
-        for &frequency in &nums {
-            *counts.entry(frequency).or_insert(0) += 1;
+        // Count the frequency of each element in nums
+        for &num in &nums {
+            *counts.entry(num).or_insert(0) += 1;
         }
-        let mut fq: Vec<(&i32, &i32)> = counts.iter().collect();
-        fq.sort_by(|a, b| a.1.cmp(b.1).then_with(||b.0.cmp(a.0)));
 
-        let mut result = Vec::new();
-        for (num, &count) in fq {
-            for _ in 0..count {
-                result.push(*num);
-            }
-        }
-        result
+        // Create a vector of nums and sort it based on the frequency and value
+        let mut sorted_nums = nums.clone();
+        sorted_nums.sort_by(|a, b| {
+            let count_a = counts.get(a).unwrap();
+            let count_b = counts.get(b).unwrap();
+            count_a.cmp(count_b).then_with(|| b.cmp(a))
+        });
+
+        sorted_nums
     }
 }
